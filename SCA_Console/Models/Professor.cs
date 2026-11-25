@@ -7,9 +7,13 @@ namespace SCA_Console.Models
         [Key]
         public int idProfessor { get; set; }
         public string nome { get; set; }
-        public bool ativo { get; set; } = false;
 
+        public List<Turma> turmas { get; set; } = new();
 
+        public bool Excluido { get; set; } = false;
+
+        //////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////
 
         public Professor(int idProfessor, string nome)
         {
@@ -17,14 +21,11 @@ namespace SCA_Console.Models
             this.nome = nome;
         }
 
-        public override string ToString() { 
-            return $"ID: {idProfessor}\n Nome: {nome}\n Ativo?: {ativo}\n";
+        public override string ToString() 
+        {
+            string isExcluded = Excluido ? "Excluído" : "Não Excluído";
+
+            return $"ID: {idProfessor} || Nome: {nome} || Status: {isExcluded}";
         }
-
-        public void Ativar() { ativo = true; }
-
-        public void Desativar() { ativo = false; }
-
-        //=============================================================================//
     }
 }

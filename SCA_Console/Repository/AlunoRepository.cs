@@ -17,25 +17,50 @@ namespace SCA_Console.Repository
             //_context.SaveChanges();
         }
 
+        //////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////
+
         public void ExcluirAluno(int id)
         {
             Aluno aluno = BuscarAluno(id);
             if (aluno != null)
             {
-                listaAlunos.Remove(aluno);
+                aluno.Excluido = true;
             }
         }
 
+        //////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////
+
+        public int MostrarCreditosAtuais(int id)
+        {
+            Aluno aluno = BuscarAluno(id);
+            if (aluno != null)
+            {
+                return aluno.numCredAtuais;
+            }
+            return 0;
+        }
+
+        //////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////
+        
         public List<Aluno> ListarAlunos()
         {
             return listaAlunos;
         }
+
+        //////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////
 
         public Aluno BuscarAluno(int id)
         {
             return listaAlunos.FirstOrDefault(a => a.idAluno == id)!;
             // retorna em ordem alfabética (basicamente a função mais importante)
         }
+
+        //////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////
 
         public List<Turma> ConsultarTurmas(int id)
         {
@@ -45,7 +70,7 @@ namespace SCA_Console.Repository
                 return aluno.turmas;
             }
 
-            return null;
+            return null!;
         }
     }
 }

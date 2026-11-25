@@ -7,10 +7,16 @@ namespace SCA_Console.Services
     {
         private readonly TurmaRepository _turmaRepository;
         private readonly AlunoRepository _alunoRepository;
-        public TurmaService(TurmaRepository turmaRepository, AlunoRepository alunoRepository)
+        private readonly ProfessorRepository _professorRepository;
+        private readonly DisciplinaRepository _disciplinaRepository;
+
+        public TurmaService
+            (TurmaRepository turmaRepository, AlunoRepository alunoRepository, ProfessorRepository professorRepository, DisciplinaRepository disciplinaRepository)
         {
             _turmaRepository = turmaRepository;
             _alunoRepository = alunoRepository;
+            _professorRepository = professorRepository;
+            _disciplinaRepository = disciplinaRepository;
         }
 
         //////////////////////////////////////////////////////////////////////////////////////
@@ -18,6 +24,14 @@ namespace SCA_Console.Services
 
         public void CriarTurma(Turma turma)
         {
+            if (turma.idTurma < 0)
+            {
+                throw new ArgumentException("[Erro] ID da turma é inválido.");
+            }
+            if (_turmaRepository.BuscarTurma(turma.idTurma) != null)
+            {
+                throw new ArgumentException("[Erro] Já existe uma turma com esse ID.");
+            }
             if (turma == null)
             {
                 throw new ArgumentException("[Erro] turma não pode ser nula.");
@@ -26,19 +40,8 @@ namespace SCA_Console.Services
             {
                 throw new ArgumentException("[Erro] turma deve conter um local válido.");
             }
-            if (_turmaRepository.BuscarTurma(turma.idTurma) != null)
-            {
-                throw new ArgumentException("[Erro] Já existe uma turma com esse ID.");
-            }
-            if (turma.idTurma <= 0)
-            {
-                throw new ArgumentException("[Erro] O ID da turma deve ser maior que 0.");
-            }
 
             turma.Abrir(); 
-            //?? não sei se é para estar aqui
-            //?? "O atributo aberta é inicializado como falso e alterado para verdadeiro quando a turma for aberta com sucesso"
-            //?? ou seja, quando ela abre, ela abre :) ????
 
             _turmaRepository.CriarTurma(turma);
         }
@@ -68,7 +71,7 @@ namespace SCA_Console.Services
                     "[Erro] Não é permitido excluir uma turma aberta.");
             }
 
-            // Remove a referência da turma dos alunos matriculados.
+            //? Remove a referência da turma dos alunos matriculados.
             foreach (Aluno a in turma.alunos)
             {
                 a.turmas.Remove(turma);
@@ -82,9 +85,6 @@ namespace SCA_Console.Services
 
         public void MatricularAluno(int idAluno, int idTurma)
         {
-            //?? não entedi o "método matricular deve permitir no máximo cinco alunos por turma"
-            //?? seria para criar um Loop onde permite cadastrar 5 alunos ao mesmo tempo?
-
             Aluno aluno = _alunoRepository.BuscarAluno(idAluno);
             Turma turma = _turmaRepository.BuscarTurma(idTurma);
 
@@ -100,6 +100,14 @@ namespace SCA_Console.Services
             {
                 throw new ArgumentException("[Erro] Aluno já está matriculado nesta turma.");
             }
+            if (turma.Excluida == true)
+            {
+                throw new ArgumentException("[Erro] A turma não pode estar excluída.");
+            }
+            if (aluno.Excluido == true)
+            {
+                throw new ArgumentException("[Erro] O aluno não pode estar excluído.");
+            }
 
             // Atualiza os dos dois relacionamentos, é tipo uma tabela n:n
             turma.alunos.Add(aluno);
@@ -108,12 +116,41 @@ namespace SCA_Console.Services
 
         //////////////////////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////////////////////////////////////
+        public void DesignarProfessor(int idProfessor, int idTurma)
+        {
+            Professor professor = _professorRepository.BuscarProfessor(idProfessor);
+            Turma turma = _turmaRepository.BuscarTurma(idTurma);
+
+            if (professor == null)
+            {
+                throw new KeyNotFoundException("[Erro] Professor não encontrado.");
+            }
+            if (turma == null)
+            {
+                throw new KeyNotFoundException("[Erro] Turma não encontrada.");
+            }
+            if (turma.professor == professor)
+            {
+                throw new ArgumentException("[Erro] Professor já está designado para esta turma.");
+            }
+            if (turma.Excluida == true)
+            {
+                throw new ArgumentException("[Erro] A turma não pode estar excluída.");
+            }
+            if (professor.Excluido == true)
+            {
+                throw new ArgumentException("[Erro] O professor não pode estar excluído.");
+            }
+
+            turma.professor = professor;
+            professor.turmas.Add(turma);
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////////
 
         public void AbrirTurma(int idTurma)
         {
-            //?? "método abrir deve permitir no mínimo dois alunos por turma"
-            //?? então para abrir uma turma precisa de alunos?
-
             Turma turma = _turmaRepository.BuscarTurma(idTurma);
 
             if (turma == null)
@@ -122,10 +159,41 @@ namespace SCA_Console.Services
             }
             if (turma.aberta)
             {
-                throw new InvalidOperationException("[Erro] Turma já está aberta.");
+                throw new ArgumentException("[Erro] Turma já está aberta.");
+            }
+            if (turma.alunos.Count < 2)
+            {
+                throw new ArgumentException("[Erro] Turma deve ter no mínimo dois alunos.");
+            }
+            if (turma.professor == null)
+            {
+                throw new ArgumentException("[Erro] Turma deve ter um professor atribuído.");
+            }
+            if (turma.disciplina == null)
+            {
+                throw new ArgumentException("[Erro] Turma deve ter uma disciplina atribuída.");
+            }
+            if (turma.Excluida == true)
+            {
+                throw new ArgumentException("[Erro] Não é possível abrir uma turma excluída.");
             }
 
             turma.Abrir();
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////////
+
+        public void FecharTurma(int idTurma)
+        {
+            Turma turma = _turmaRepository.BuscarTurma(idTurma);
+
+            if (turma == null)
+            {
+                throw new KeyNotFoundException("[Erro] Turma não encontrada.");
+            }
+
+            turma.Fechar();
         }
 
         //////////////////////////////////////////////////////////////////////////////////////
@@ -135,11 +203,12 @@ namespace SCA_Console.Services
         {
             Turma turma = _turmaRepository.BuscarTurma(idTurma);
 
-            if (turma != null)
+            if (turma == null || turma.Excluida == true)
             {
-                return turma.alunos;
+                throw new KeyNotFoundException("[Erro] Turma não foi encontrada.");
             }
-            throw new KeyNotFoundException("[Erro] Turma não foi encontrada.");
+
+            return turma.alunos;
         }
     }
 }

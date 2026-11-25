@@ -17,10 +17,11 @@ namespace SCA_Console.UI
             Console.WriteLine("\n--- Criar nova turma ---");
             try
             {
+                Console.Write("Insira o ID da turma: ");
                 int id = utilFuncs.EntrarId();
 
                 Console.Write("Insira o nome do local: ");
-                string local = Console.ReadLine() ?? ""; // lança um erro caso nã0 digite nada [service]
+                string local = utilFuncs.EntrarNome();
 
                 Turma tempTurma = new Turma(id, local);
                 _turmaService.CriarTurma(tempTurma);
@@ -42,7 +43,8 @@ namespace SCA_Console.UI
 
             try
             {
-                int id = utilFuncs.EntrarId(); // !!!!!!!!!! adapatar
+                Console.Write("Insira o ID da turma: ");
+                int id = utilFuncs.EntrarId();
 
                 _turmaService.ExcluirTurma(id);
 
@@ -63,11 +65,34 @@ namespace SCA_Console.UI
 
             try
             {
-                int id = utilFuncs.EntrarId(); // !!!!!!!!!! adapatar
+                Console.Write("Insira o ID da turma: ");
+                int id = utilFuncs.EntrarId();
 
                 _turmaService.AbrirTurma(id);
 
                 Console.WriteLine("\n[Sucesso] Turma aberta!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////////
+
+        public void FecharTurma()
+        {
+            Console.WriteLine("\n--- Fechar turma ---");
+
+            try
+            {
+                Console.Write("Insira o ID da turma: ");
+                int id = utilFuncs.EntrarId();
+
+                _turmaService.FecharTurma(id);
+
+                Console.WriteLine("\n[Sucesso] Turma fechada!");
             }
             catch (Exception ex)
             {
@@ -92,9 +117,19 @@ namespace SCA_Console.UI
 
             foreach (Turma t in turmas)
             {
-                Console.WriteLine($"- {t}");
+                string isExcluded = t.Excluida ? "Excluída" : "Não Excluída";
+
+                Console.WriteLine(
+                    $" - ID turma: {t.idTurma}" +
+                    $" - {t.local}" +
+                    $" - {isExcluded}\n");
+
+                if (t.professor != null)
+                {
+                    Console.WriteLine($"- {t.professor}");
+                }
             }
-            Console.WriteLine("___________________________");
+            Console.WriteLine("______________________________");
         }
 
         //////////////////////////////////////////////////////////////////////////////////////
@@ -107,14 +142,38 @@ namespace SCA_Console.UI
             try
             {
                 Console.Write("Insira o ID do aluno: ");
-                int idAluno = utilFuncs.EntrarId(); // !!!!!!!!!! adapatar
+                int idAluno = utilFuncs.EntrarId();
 
                 Console.Write("Insira o ID da turma: ");
-                int idTurma = utilFuncs.EntrarId(); // !!!!!!!!!! adapatar
+                int idTurma = utilFuncs.EntrarId();
 
                 _turmaService.MatricularAluno(idAluno, idTurma);
 
                 Console.WriteLine($"\n[Sucesso] Aluno {idAluno} matriculado na turma {idTurma}!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////////
+        public void DesignarProfessor()
+        {
+            Console.WriteLine("\n--- Designar professor ---");
+
+            try
+            {
+                Console.Write("Insira o ID do professor: ");
+                int idProfessor = utilFuncs.EntrarId();
+
+                Console.Write("Insira o ID da turma: ");
+                int idTurma = utilFuncs.EntrarId();
+
+                _turmaService.DesignarProfessor(idProfessor, idTurma);
+
+                Console.WriteLine($"\n[Sucesso] Professor {idProfessor} designado à turma {idTurma}!");
             }
             catch (Exception ex)
             {
@@ -131,6 +190,7 @@ namespace SCA_Console.UI
 
             try
             {
+                Console.Write("Insira o ID da turma: ");
                 int id = utilFuncs.EntrarId();
 
                 List<Aluno> alunos = _turmaService.ExibirPauta(id);
@@ -140,8 +200,9 @@ namespace SCA_Console.UI
                 foreach (Aluno a in alunos)
                 {
                     Console.WriteLine($"- {a}");
+                    Console.WriteLine($"______");
                 }
-                Console.WriteLine("___________________________");
+                Console.WriteLine("__________________________");
             }
             catch (Exception ex)
             {

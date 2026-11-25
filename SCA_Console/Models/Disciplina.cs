@@ -7,24 +7,26 @@ namespace SCA_Console.Models
         [Key]
 		public int idDisciplina { get; set; }
         public string nome { get; set; }
-        public string cargaHoraria { get; set; }
-		public int numCreditos { get; set; }
+        public List<Turma> turmas { get; set; } = new();
+        public bool Excluido { get; set; } = false;
 
+        //public string cargaHoraria { get; set; }
+        //public int numCreditos { get; set; }
 
-
-        public Disciplina(int idDisciplina, string nome, string cargaHoraria, int numCreditos)
+        //////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////
+        public Disciplina(int idDisciplina, string nome)
         {
             this.idDisciplina = idDisciplina;
             this.nome = nome;
-			this.cargaHoraria = cargaHoraria;
-			this.numCreditos = numCreditos;
+			//this.cargaHoraria = cargaHoraria;
+			//this.numCreditos = numCreditos;
+            //? NO MOMENTO NÃO PRECISA POR 
         }
 
         public override string ToString() { 
-            return $"ID: {idDisciplina}\n Nome: {nome}\n Carga Horária: {cargaHoraria}\n Núm. Créditos: {numCreditos}\n";
+            return $"ID: {idDisciplina} || Nome: {nome}";
         }
-
-        //=============================================================================//
     }
 }
 

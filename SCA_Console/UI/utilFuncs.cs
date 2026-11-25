@@ -4,7 +4,6 @@
     {
         public static int EntrarId()
         {
-            Console.Write("Insira o ID: ");
             try
             {
                 int id = Convert.ToInt32(Console.ReadLine());
@@ -21,10 +20,13 @@
             }
         }
 
+        //////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////////
+
         public static string EntrarNome()
         {
-            Console.Write("Insira o nome: ");
             string nome = Console.ReadLine()!;
+
             if (string.IsNullOrWhiteSpace(nome) || nome.Length < 2)
             {
                 Console.WriteLine("Nome inválido. Por favor, insira um nome válido.");
