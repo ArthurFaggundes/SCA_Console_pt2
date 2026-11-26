@@ -15,9 +15,10 @@ namespace SCA_Console.Models
         //////////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////////////////////////
 
-        public Professor(int idProfessor, string nome)
+        public Professor() {}
+
+        public Professor(string nome)
         {
-            this.idProfessor = idProfessor;
             this.nome = nome;
         }
 

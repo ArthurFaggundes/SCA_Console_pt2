@@ -14,16 +14,13 @@ namespace SCA_Console.UI
 
         public void CriarNovoAluno()
         {
-            Console.WriteLine("\n--- Criar novo aluno ---");
+            Console.WriteLine("\n--- Criar novo aluno ---\n");
             try
             {
-                Console.Write("Insira o ID do aluno: ");
-                int id = utilFuncs.EntrarId();
                 Console.Write("Insira o nome do aluno: ");
                 string nome = utilFuncs.EntrarNome();
 
-                Aluno tempAluno = new Aluno(id, nome);
-                _alunoService.CriarAluno(tempAluno);
+                _alunoService.CriarAluno(new Aluno(nome));
 
                 Console.WriteLine("\n[Sucesso] Aluno cadastrado!");
             }
@@ -37,7 +34,7 @@ namespace SCA_Console.UI
         //////////////////////////////////////////////////////////////////////////////////////
         public void ExcluirAluno()
         {
-            Console.WriteLine("\n--- Excluir aluno ---");
+            Console.WriteLine("\n--- Excluir aluno ---\n");
             try
             {
                 Console.Write("Insira o ID do aluno: ");
@@ -58,7 +55,7 @@ namespace SCA_Console.UI
 
         public void MostrarCreditosAtuais()
         {
-            Console.WriteLine("\n--- Mostrar créditos atuais do aluno ---");
+            Console.WriteLine("\n--- Mostrar créditos atuais do aluno ---\n");
             try
             {
                 Console.Write("Insira o ID do aluno: ");
@@ -77,7 +74,7 @@ namespace SCA_Console.UI
         //////////////////////////////////////////////////////////////////////////////////////
         public void MostrarTodosOsAlunos()
         {
-            Console.WriteLine("\n--- Lista de alunos ---");
+            Console.WriteLine("\n--- Lista de alunos ---\n");
 
             List<Aluno> alunos = _alunoService.ListarAlunos();
 
@@ -85,27 +82,27 @@ namespace SCA_Console.UI
             {
                 Console.WriteLine($"- {a}");
             }
-            Console.WriteLine("___________________________");
+            Console.WriteLine("_______________________");
         }
 
         //////////////////////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////////////////////////////////////
         public void MostrarTurmasDoAluno()
         {
-            Console.WriteLine("\n--- Buscar turmas do aluno ---");
+            Console.WriteLine("\n--- Buscar turmas do aluno ---\n");
             try
             {
                 Console.Write("Insira o ID do aluno: ");
                 int id = utilFuncs.EntrarId();
                 List<Turma> turmas = _alunoService.MostrarTurmasDoAluno(id);
 
-                Console.WriteLine($"Turmas inscritas ({turmas.Count}):");
+                Console.WriteLine($"Turmas inscritas ({turmas.Count}):\n");
 
                 foreach (Turma t in turmas)
                 {
-                    Console.WriteLine($"- {t}");
+                    Console.WriteLine($"{t}");
                 }
-                Console.WriteLine("___________________________");
+                Console.WriteLine("______________________________");
             }
             catch (ArgumentException ex)
             {

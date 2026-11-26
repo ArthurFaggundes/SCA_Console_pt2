@@ -15,9 +15,11 @@ namespace SCA_Console.Models
         //////////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////////////////////////
 
-        public Aluno(int idAluno, string nome)
-        {
-            this.idAluno = idAluno;
+        // Para o banco de dados, é necessário ter um construtor sem parâmetros para que o Entity Framework possa instanciar a classe corretamente.
+        public Aluno() {}
+
+        public Aluno(string nome) 
+        { 
             this.nome = nome;
         }
 

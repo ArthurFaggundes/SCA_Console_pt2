@@ -1,14 +1,19 @@
-﻿using SCA_Console.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using SCA_Console.Data;
+using SCA_Console.Models;
 
 namespace SCA_Console.Repository
 {
     public class TurmaRepository
     {
-        public readonly List<Turma> listaTurmas = new List<Turma>();
+        private readonly ScaDBContext _context;
+        public TurmaRepository(ScaDBContext context)
+            { _context = context; }
 
         public void CriarTurma(Turma turma)
         {
-            listaTurmas.Add(turma);
+            _context.Turmas.Add(turma);
+            _context.SaveChanges(); 
         }
 
         //////////////////////////////////////////////////////////////////////////
@@ -21,6 +26,7 @@ namespace SCA_Console.Repository
             if (turma != null)
             {
                 turma.Excluida = true;
+                AlterarTurma(turma);
             }
         }
 
@@ -29,14 +35,28 @@ namespace SCA_Console.Repository
 
         public List<Turma> ListarTurmas()
         {
-            return listaTurmas;
+            return _context.Turmas
+                    .Include(t => t.professor)
+                    .Include(t => t.disciplina)
+                    .ToList();
         }
 
         //////////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////////////////////////
-        public Turma BuscarTurma(int id)
+        public Turma? BuscarTurma(int id)
         {
-            return listaTurmas.FirstOrDefault(t => t.idTurma == id)!;
+            return _context.Turmas
+                    .Include(t => t.professor)
+                    .Include(t => t.disciplina)
+                    .FirstOrDefault(t => t.idTurma == id);
+        }
+
+        //////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////
+        public void AlterarTurma(Turma turma)
+        {
+            _context.Turmas.Update(turma);
+            _context.SaveChanges();
         }
     }
 }

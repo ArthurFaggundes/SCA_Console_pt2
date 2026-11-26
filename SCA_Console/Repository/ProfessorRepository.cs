@@ -1,4 +1,6 @@
 ﻿//using SCA_Console.Data;
+using Microsoft.EntityFrameworkCore;
+using SCA_Console.Data;
 using SCA_Console.Models;
 using SCA_Console.UI;
 
@@ -6,19 +8,17 @@ namespace SCA_Console.Repository
 {
     public class ProfessorRepository
     {
-        //private readonly SCAdbContext _context;
+        private readonly ScaDBContext _context;
 
-        //public ProfessorRepository(SCAdbContext context)
-        //{
-        //    _context = context;
-        //}
+        public ProfessorRepository(ScaDBContext context)
+            {  _context = context; }
 
-        public readonly List<Professor> listaProfessores = new List<Professor>();
+        //////////////////////////////////////////////////////////////////////////
 
         public void CriarProfessor(Professor professor)
         {
-            listaProfessores.Add(professor);
-            //_context.SaveChanges();
+            _context.Professores.Add(professor);
+            _context.SaveChanges();
         }
 
         //////////////////////////////////////////////////////////////////////////
@@ -30,8 +30,8 @@ namespace SCA_Console.Repository
             if (professor != null)
             {
                 professor.Excluido = true;
+                AlterarProfessor(professor);
             }
-            //_context.SaveChanges();
         }
 
         //////////////////////////////////////////////////////////////////////////
@@ -42,9 +42,9 @@ namespace SCA_Console.Repository
             Professor professor = BuscarProfessor(id);
             if (professor != null)
             {
-                return professor.turmas;
+                return professor.turmas.ToList();
             }
-            return null!;
+            return new List<Turma>();
         }
 
         //////////////////////////////////////////////////////////////////////////
@@ -52,16 +52,25 @@ namespace SCA_Console.Repository
 
         public List<Professor> ListarProfessores()
         {
-            return listaProfessores;
+            return _context.Professores.ToList(); //! ESSE A PRINCIPIO NÃO PRECISA DO INCLUDE
         }
 
         //////////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////////////////////////
 
-        public Professor BuscarProfessor(int id)
+        public Professor? BuscarProfessor(int id)
         {
-            return listaProfessores.FirstOrDefault(p => p.idProfessor == id)!;
-            // retorna em ordem alfabética (basicamente a função mais importante)
+            return _context.Professores
+                            .Include(p => p.turmas)
+                            .FirstOrDefault(p => p.idProfessor == id);
+        }
+
+        //////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////
+        public void AlterarProfessor(Professor prof)
+        {
+            _context.Professores.Update(prof);
+            _context.SaveChanges();
         }
     }
 }

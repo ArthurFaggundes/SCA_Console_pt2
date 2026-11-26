@@ -1,22 +1,22 @@
 ﻿//using SCA_Console.Data;
+using Microsoft.EntityFrameworkCore;
+using SCA_Console.Data;
 using SCA_Console.Models;
 
 namespace SCA_Console.Repository
 {
     public class DisciplinaRepository
     {
-        //private readonly SCAdbContext _context;
+        private readonly ScaDBContext _context;
+        public DisciplinaRepository(ScaDBContext context)
+            { _context = context; }
 
-        //public DisciplinaRepository(SCAdbContext context)
-        //{
-        //    _context = context;
-        //}
-
-        public readonly List<Disciplina> listaDisciplinas = new List<Disciplina>();
+        //////////////////////////////////////////////////////////////////////////
 
         public void CriarDisciplina(Disciplina disciplina)
         {
-            listaDisciplinas.Add(disciplina);
+            _context.Disciplinas.Add(disciplina);
+            _context.SaveChanges();
         }
 
         //////////////////////////////////////////////////////////////////////////
@@ -28,15 +28,18 @@ namespace SCA_Console.Repository
             if (disciplina != null)
             {
                 disciplina.Excluido = true;
+                AlterarDisciplina(disciplina);
             }
         }
 
         //////////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////////////////////////
 
-        public Disciplina BuscarDisciplina(int id)
+        public Disciplina? BuscarDisciplina(int id)
         {
-            return listaDisciplinas.FirstOrDefault(d => d.idDisciplina == id)!;
+            return _context.Disciplinas
+                            .Include(d => d.turmas)
+                            .FirstOrDefault(d => d.idDisciplina == id);
         }
 
         //////////////////////////////////////////////////////////////////////////
@@ -44,7 +47,7 @@ namespace SCA_Console.Repository
 
         public List<Disciplina> ListarDisciplinas()
         {
-            return listaDisciplinas;
+            return _context.Disciplinas.ToList();
         }
 
         //////////////////////////////////////////////////////////////////////////
@@ -58,7 +61,15 @@ namespace SCA_Console.Repository
                 return disciplina.turmas;
             }
 
-            return null!;
+            return new List<Turma>();
+        }
+
+        //////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////
+        public void AlterarDisciplina(Disciplina disciplina)
+        {
+            _context.Disciplinas.Update(disciplina);
+            _context.SaveChanges();
         }
     }
 }

@@ -1,34 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using SCA_Console.UI;
 
-using SCA_Console.Repository;
-using SCA_Console.Services;
-using SCA_Console.UI;
-
-public class Program
+public class ConsoleInterface
 {
-    static void Main(string[] args)
+    public void ConsoleHandler(AlunoUI alunoUI, DisciplinaUI disciplinaUI, ProfessorUI professorUI, TurmaUI turmaUI)
     {
-        AlunoRepository alunoRepository = new();
-        AlunoService alunoService = new(alunoRepository);
-        AlunoUI alunoUI = new(alunoService);
-
-        ProfessorRepository professorRepository = new();
-        ProfessorService professorService = new(professorRepository);
-        ProfessorUI professorUI = new(professorService);
-
-        DisciplinaRepository disciplinaRepository = new();
-        DisciplinaService disciplinaService = new(disciplinaRepository);
-        DisciplinaUI disciplinaUI = new(disciplinaService);
-
-        TurmaRepository turmaRepository = new();
-        TurmaService turmaService = new(turmaRepository, alunoRepository, professorRepository, disciplinaRepository);
-        TurmaUI turmaUI = new(turmaService);
-
         Console.WriteLine("Bem-vindo(a)!");
         while (true)
         {
             Console.WriteLine("\n+-------------------------------------------+");
-            Console.WriteLine("|   Qual categoria você deseja trabalhar?   |");
+            Console.WriteLine("| Com qual categoria você deseja trabalhar? |");
             Console.WriteLine("+-------------------------------------------+");
             Console.WriteLine("a. Alunos");
             Console.WriteLine("b. Turmas");
@@ -38,6 +18,8 @@ public class Program
             Console.WriteLine();
             Console.Write("[CATEGORIA]: ");
             string? escolhaCategoria = Console.ReadLine();
+            if (escolhaCategoria != null) escolhaCategoria = escolhaCategoria.Trim().ToLower();
+
             string? subOpcao = null;
 
             switch (escolhaCategoria)
@@ -81,6 +63,7 @@ public class Program
                     Console.WriteLine("6. Mostrar pauta da turma");
                     Console.WriteLine("7. Matricular um aluno a uma turma");
                     Console.WriteLine("8. Designar um professor a uma turma");
+                    Console.WriteLine("9. Atribuir uma disciplina a uma turma");
                     Console.WriteLine("0. Voltar");
                     Console.WriteLine();
                     Console.Write("[OPÇÃO]: ");
@@ -96,8 +79,9 @@ public class Program
                             case "6": turmaUI.MostrarPauta();         break;
                             case "7": turmaUI.MatricularAluno();      break;
                             case "8": turmaUI.DesignarProfessor();    break;
+                            case "9": turmaUI.AtribuirDisciplina();   break;
 
-                            case "0":
+                        case "0":
                                 Console.WriteLine("\nVoltando..."); break;
                             default:
                                 Console.WriteLine("\nOpção inválida. Tente novamente."); break;
@@ -157,6 +141,8 @@ public class Program
                             Console.WriteLine("\nOpção inválida. Tente novamente."); break;
                     }
                     break;
+                ////////////////////////////////////////////////////////////
+                ////////////////////////////////////////////////////////////
 
                 case "x":
                     Console.WriteLine("\nObrigado por usar o SCA do Arthur! :)");

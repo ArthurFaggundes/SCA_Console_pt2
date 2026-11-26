@@ -14,16 +14,13 @@ namespace SCA_Console.UI
 
         public void CriarNovaDisciplina()
         {
-            Console.WriteLine("\n--- Criar nova disciplina ---");
+            Console.WriteLine("\n--- Criar nova disciplina ---\n");
             try
             {
-                Console.Write("Insira o ID da disciplina: ");
-                int id = utilFuncs.EntrarId();
                 Console.Write("Insira o nome da disciplina: ");
                 string nome = utilFuncs.EntrarNome();
 
-                Disciplina tempDisciplina = new Disciplina(id, nome);
-                _disciplinaService.CriarDisciplina(tempDisciplina);
+                _disciplinaService.CriarDisciplina(new Disciplina(nome));
 
                 Console.WriteLine("\n[Sucesso] Disciplina cadastrada!");
             }
@@ -37,7 +34,7 @@ namespace SCA_Console.UI
         //////////////////////////////////////////////////////////////////////////////////////
         public void ExcluirDisciplina()
         {
-            Console.WriteLine("\n--- Excluir disciplina ---");
+            Console.WriteLine("\n--- Excluir disciplina ---\n");
             try
             {
                 Console.Write("Insira o ID da disciplina: ");
@@ -58,7 +55,7 @@ namespace SCA_Console.UI
 
         public void MostrarTodasAsDisciplinas()
         {
-            Console.WriteLine("\n--- Lista de disciplinas ---");
+            Console.WriteLine("\n--- Lista de disciplinas ---\n");
 
             List<Disciplina> disciplinas = _disciplinaService.ListarDisciplinas();
 
@@ -66,26 +63,26 @@ namespace SCA_Console.UI
             {
                 Console.WriteLine($"- {d}");
             }
-            Console.WriteLine("___________________________");
+            Console.WriteLine("____________________________");
         }
 
         //////////////////////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////////////////////////////////////
         public void MostrarTurmasDaDisciplina()
         {
-            Console.WriteLine("\n--- Buscar turmas da disciplina ---");
+            Console.WriteLine("\n--- Buscar turmas da disciplina ---\n");
             try
             {
                 Console.Write("Insira o ID da disciplina: ");
                 int id = utilFuncs.EntrarId();
                 List<Turma> turmas = _disciplinaService.MostrarTurmasDaDisciplina(id);
 
-                Console.WriteLine($"Turmas atribuidas ({turmas.Count}):");
+                Console.WriteLine($"Turmas atribuidas ({turmas.Count}):\n");
                 foreach (Turma t in turmas)
                 {
-                    Console.WriteLine($"- {t.idTurma}\n - {t.local}\n - {t.professor}\n - {t.Excluida}\n");
+                    Console.WriteLine($"- {t}");
                 }
-                Console.WriteLine("___________________________");
+                Console.WriteLine("_____________________________________");
             }
             catch (ArgumentException ex)
             {

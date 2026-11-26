@@ -15,15 +15,12 @@ namespace SCA_Console.Models
 
         //////////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////////////////////////
-        public Disciplina(int idDisciplina, string nome)
-        {
-            this.idDisciplina = idDisciplina;
-            this.nome = nome;
-			//this.cargaHoraria = cargaHoraria;
-			//this.numCreditos = numCreditos;
-            //? NO MOMENTO NÃO PRECISA POR 
-        }
+        public Disciplina() {}
 
+        public Disciplina(string nome)
+        {
+            this.nome = nome;
+        }
         public override string ToString() { 
             return $"ID: {idDisciplina} || Nome: {nome}";
         }

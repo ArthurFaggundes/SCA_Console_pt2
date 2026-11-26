@@ -15,16 +15,13 @@ namespace SCA_Console.UI
 
         public void CriarNovoProfessor()
         {
-            Console.WriteLine("\n--- Criar novo professor ---");
+            Console.WriteLine("\n--- Criar novo professor ---\n");
             try
             {
-                Console.Write("Insira o ID do professor: ");
-                int id = utilFuncs.EntrarId();
                 Console.Write("Insira o nome do professor: ");
                 string nome = utilFuncs.EntrarNome();
 
-                Professor tempProfessor = new Professor(id, nome);
-                _professorService.CriarProfessor(tempProfessor);
+                _professorService.CriarProfessor(new Professor(nome));
 
                 Console.WriteLine("\n[Sucesso] Professor cadastrado!");
             }
@@ -38,7 +35,7 @@ namespace SCA_Console.UI
         //////////////////////////////////////////////////////////////////////////////////////
         public void ExcluirProfessor()
         {
-            Console.WriteLine("\n--- Excluir professor ---");
+            Console.WriteLine("\n--- Excluir professor ---\n");
             try
             {
                 Console.Write("Insira o ID do professor: ");
@@ -58,7 +55,7 @@ namespace SCA_Console.UI
         //////////////////////////////////////////////////////////////////////////////////////
         public void MostrarTodosOsProfessores()
         {
-            Console.WriteLine("\n--- Lista de professores ---");
+            Console.WriteLine("\n--- Lista de professores ---\n");
 
             List<Professor> professores = _professorService.ListarProfessores();
 
@@ -66,14 +63,14 @@ namespace SCA_Console.UI
             {
                 Console.WriteLine($"- {p}");
             }
-            Console.WriteLine("___________________________");
+            Console.WriteLine("____________________________");
         }
 
         //////////////////////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////////////////////////////////////
         public void MostrarTurmasDoProfessor()
         {
-            Console.WriteLine("\n--- Buscar turmas do professor ---");
+            Console.WriteLine("\n--- Buscar turmas do professor ---\n");
             try
             {
                 Console.Write("Insira o ID do professor: ");
@@ -86,7 +83,7 @@ namespace SCA_Console.UI
                 {
                     Console.WriteLine($"- {t}");
                 }
-                Console.WriteLine("___________________________");
+                Console.WriteLine("__________________________________");
             }
             catch (ArgumentException ex)
             {

@@ -17,19 +17,19 @@ namespace SCA_Console.Services
         {
             if (prof.idProfessor < 0)
             {
-                throw new ArgumentException("[Erro] ID do professor é inválido.");
+                throw new ArgumentException("\n[Erro] ID do professor é inválido.");
             }
             if (_professorRepository.BuscarProfessor(prof.idProfessor) != null)
             {
-                throw new ArgumentException("[Erro] Já existe um professor com esse ID.");
+                throw new ArgumentException("\n[Erro] Já existe um professor com esse ID.");
             }
             if (string.IsNullOrWhiteSpace(prof.nome)) 
             {
-                throw new ArgumentException("[Erro] nome não pode ser nulo ou em branco");
+                throw new ArgumentException("\n[Erro] nome não pode ser nulo ou em branco");
             }
             if (prof.nome.Length <= 2) 
             {
-                throw new ArgumentException("[Erro] nome tem que ter mais de dois caracteres");
+                throw new ArgumentException("\n[Erro] nome tem que ter mais de dois caracteres");
             }
 
             _professorRepository.CriarProfessor(prof);
@@ -44,7 +44,7 @@ namespace SCA_Console.Services
 
             if (prof == null)
             {
-                throw new KeyNotFoundException("[Erro] Professor não encontrado.");
+                throw new KeyNotFoundException("\n[Erro] Professor não encontrado.");
             }
 
             _professorRepository.ExcluirProfessor(idProfessor);
@@ -56,7 +56,7 @@ namespace SCA_Console.Services
         public List<Professor> ListarProfessores()
         {
             return _professorRepository.ListarProfessores();
-            // da pra encaixar verificiações e precisar
+            // da pra encaixar verificiações se precisar
         }
 
         //////////////////////////////////////////////////////////////////////////////////////
@@ -64,16 +64,11 @@ namespace SCA_Console.Services
 
         public List<Turma> MostrarTurmasDoProfessor(int id)
         {
-            Professor prof = _professorRepository.BuscarProfessor(id);
             List<Turma> turmas = _professorRepository.ConsultarTurmas(id);
 
-            if (prof == null)
+            if (turmas == null)
             {
-                throw new KeyNotFoundException("[Erro] Professor não encontrado.");
-            }
-            if (turmas == null || turmas.Count == 0)
-            {
-                throw new KeyNotFoundException("[Erro] Nenhuma turma encontrada.");
+                throw new KeyNotFoundException("\n[Erro] Nenhuma turma encontrada.");
             }
 
             return turmas;

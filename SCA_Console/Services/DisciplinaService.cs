@@ -18,19 +18,19 @@ namespace SCA_Console.Services
         {
             if (disciplina.idDisciplina < 0)
             {
-                throw new ArgumentException("[Erro] ID da disciplina é inválido.");
+                throw new ArgumentException("\n[Erro] ID da disciplina é inválido.");
             }
             if (_disciplinaRepository.BuscarDisciplina(disciplina.idDisciplina) != null)
             {
-                throw new ArgumentException("[Erro] Já existe uma disciplina com esse ID.");
+                throw new ArgumentException("\n[Erro] Já existe uma disciplina com esse ID.");
             }
             if (string.IsNullOrWhiteSpace(disciplina.nome))
             {
-                throw new ArgumentException("[Erro] nome não pode ser nulo ou em branco");
+                throw new ArgumentException("\n[Erro] nome não pode ser nulo ou em branco");
             }
             if (disciplina.nome.Length <= 2)
             {
-                throw new ArgumentException("[Erro] nome tem que ter mais de dois caracteres");
+                throw new ArgumentException("\n[Erro] nome tem que ter mais de dois caracteres");
             }
 
             _disciplinaRepository.CriarDisciplina(disciplina);
@@ -45,7 +45,7 @@ namespace SCA_Console.Services
 
             if (disciplina == null)
             {
-                throw new KeyNotFoundException("[Erro] Disciplina não encontrada.");
+                throw new KeyNotFoundException("\n[Erro] Disciplina não encontrada.");
             }
 
             _disciplinaRepository.ExcluirDisciplina(idDisciplina);
@@ -65,16 +65,11 @@ namespace SCA_Console.Services
 
         public List<Turma> MostrarTurmasDaDisciplina(int id)
         {
-            Disciplina disciplina = _disciplinaRepository.BuscarDisciplina(id);
             List<Turma> turmas = _disciplinaRepository.ConsultarTurmas(id);
 
-            if (disciplina == null)
+            if (turmas == null)
             {
-                throw new KeyNotFoundException("[Erro] Disciplina não encontrada.");
-            }
-            if (turmas == null || turmas.Count == 0)
-            {
-                throw new KeyNotFoundException("[Erro] Nenhuma turma encontrada.");
+                throw new KeyNotFoundException("\n[Erro] Nenhuma turma encontrada.");
             }
 
             return turmas;

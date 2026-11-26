@@ -18,9 +18,10 @@ namespace SCA_Console.Models
         //////////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////////////////////////
 
-        public Turma(int idTurma, string local)
+        public Turma() {}
+
+        public Turma(string local)
         {
-            this.idTurma = idTurma;
             this.local = local;
         }
 
@@ -29,18 +30,10 @@ namespace SCA_Console.Models
             string isOpen = aberta ? "Turma aberta" : "Turma fechada";
             string isExcluded = Excluida ? "Excluída" : "Não Excluída";
 
-            return $"ID: {idTurma}\n Local: {local}\n {isOpen}\n {isExcluded}\n Disciplina: {disciplina}\n Professor: {professor}";
+            return $"ID: {idTurma} || Local: {local} || {isOpen} || {isExcluded}";
         }
 
         public void Abrir() { aberta = true; }
-
         public void Fechar() { aberta = false; }
-
-
-        public void DesignarProfessor(Professor professorDesignado)
-        { professor = professorDesignado; } //? por enquanto não é tão necessário
-
-        public void DesignarDisciplina(Disciplina disciplinaDesignada)
-        { disciplina = disciplinaDesignada; } //? por enquanto não é tão necessário
     }
 }

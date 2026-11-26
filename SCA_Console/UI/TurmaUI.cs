@@ -14,17 +14,13 @@ namespace SCA_Console.UI
 
         public void CriarNovaTurma()
         {
-            Console.WriteLine("\n--- Criar nova turma ---");
+            Console.WriteLine("\n--- Criar nova turma ---\n");
             try
             {
-                Console.Write("Insira o ID da turma: ");
-                int id = utilFuncs.EntrarId();
-
                 Console.Write("Insira o nome do local: ");
                 string local = utilFuncs.EntrarNome();
 
-                Turma tempTurma = new Turma(id, local);
-                _turmaService.CriarTurma(tempTurma);
+                _turmaService.CriarTurma(new Turma(local)); 
 
                 Console.WriteLine("\n[Sucesso] Turma cadastrada!");
             }
@@ -39,7 +35,7 @@ namespace SCA_Console.UI
 
         public void ExcluirTurma()
         {
-            Console.WriteLine("\n--- Excluir turma ---");
+            Console.WriteLine("\n--- Excluir turma ---\n");
 
             try
             {
@@ -61,7 +57,7 @@ namespace SCA_Console.UI
         
         public void AbrirTurma()
         {
-            Console.WriteLine("\n--- Abrir turma ---");
+            Console.WriteLine("\n--- Abrir turma ---\n");
 
             try
             {
@@ -105,7 +101,7 @@ namespace SCA_Console.UI
 
         public void MostrarTodasAsTurmas()
         {
-            Console.WriteLine("\n--- Buscar todas as turmas ---");
+            Console.WriteLine("\n--- Buscar todas as turmas ---\n");
 
             List<Turma> turmas = _turmaService.ListarTodasAsTurmas();
 
@@ -119,17 +115,18 @@ namespace SCA_Console.UI
             {
                 string isExcluded = t.Excluida ? "Excluída" : "Não Excluída";
 
-                Console.WriteLine(
-                    $" - ID turma: {t.idTurma}" +
-                    $" - {t.local}" +
-                    $" - {isExcluded}\n");
+                Console.WriteLine($"Turma >> {t}");
 
                 if (t.professor != null)
                 {
-                    Console.WriteLine($"- {t.professor}");
+                    Console.WriteLine($"Professor >> {t.professor}");
                 }
+                if (t.disciplina != null)
+                {
+                    Console.WriteLine($"Disciplina >> {t.disciplina}");
+                }
+                Console.WriteLine("______________________________");
             }
-            Console.WriteLine("______________________________");
         }
 
         //////////////////////////////////////////////////////////////////////////////////////
@@ -183,11 +180,34 @@ namespace SCA_Console.UI
 
         //////////////////////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////////////////////////////////////
+        public void AtribuirDisciplina()
+        {
+            Console.WriteLine("\n--- Atribuir Disciplina ---\n");
+
+            try
+            {
+                Console.Write("Insira o ID da disciplina: ");
+                int idDisciplina = utilFuncs.EntrarId();
+
+                Console.Write("Insira o ID da turma: ");
+                int idTurma = utilFuncs.EntrarId();
+
+                _turmaService.AtribuirDisciplina(idDisciplina, idTurma);
+
+                Console.WriteLine($"\n[Sucesso] Disciplina {idDisciplina} atribuída à turma {idTurma}!");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        //////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////////
 
         public void MostrarPauta()
         {
-            Console.WriteLine("\n--- Pauta da turma ---");
-
+            Console.WriteLine("\n--- Pauta da turma ---\n");
             try
             {
                 Console.Write("Insira o ID da turma: ");
@@ -195,14 +215,13 @@ namespace SCA_Console.UI
 
                 List<Aluno> alunos = _turmaService.ExibirPauta(id);
 
-                Console.WriteLine($"Alunos matriculados ({alunos.Count}):");
+                Console.WriteLine($"Alunos matriculados ({alunos.Count}):\n");
 
                 foreach (Aluno a in alunos)
                 {
                     Console.WriteLine($"- {a}");
-                    Console.WriteLine($"______");
+                    Console.WriteLine($"______________________");
                 }
-                Console.WriteLine("__________________________");
             }
             catch (Exception ex)
             {

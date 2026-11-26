@@ -17,19 +17,19 @@ namespace SCA_Console.Services
         {
             if (aluno.idAluno < 0)
             {
-                throw new ArgumentException("[Erro] ID do aluno é inválido.");
+                throw new ArgumentException("\n[Erro] ID do aluno é inválido.");
             }
             if (_alunoRepository.BuscarAluno(aluno.idAluno) != null)
             {
-                throw new ArgumentException("[Erro] Já existe um aluno com esse ID.");
+                throw new ArgumentException("\n[Erro] Já existe um aluno com esse ID.");
             }
             if (string.IsNullOrWhiteSpace(aluno.nome))
             {
-                throw new ArgumentException("[Erro] nome não pode ser nulo ou em branco");
+                throw new ArgumentException("\n[Erro] nome não pode ser nulo ou em branco");
             }
             if (aluno.nome.Length <= 2)
             {
-                throw new ArgumentException("[Erro] nome tem que ter mais de dois caracteres");
+                throw new ArgumentException("\n[Erro] nome tem que ter mais de dois caracteres");
             }
 
             _alunoRepository.CriarAluno(aluno);
@@ -44,7 +44,7 @@ namespace SCA_Console.Services
 
             if (aluno == null)
             {
-                throw new KeyNotFoundException("[Erro] Aluno não encontrado.");
+                throw new KeyNotFoundException("\n[Erro] Aluno não encontrado.");
             }
 
             _alunoRepository.ExcluirAluno(idAluno);
@@ -69,7 +69,7 @@ namespace SCA_Console.Services
 
             if (aluno == null)
             {
-                throw new KeyNotFoundException("[Erro] Aluno não encontrado.");
+                throw new KeyNotFoundException("\n[Erro] Aluno não encontrado.");
             }
             return credAtuais;
         }
@@ -79,16 +79,12 @@ namespace SCA_Console.Services
 
         public List<Turma> MostrarTurmasDoAluno(int id)
         {
-            Aluno aluno = _alunoRepository.BuscarAluno(id);
-            List<Turma> turmas = _alunoRepository.ConsultarTurmas(id);
 
-            if (aluno == null)
+            List<Turma>? turmas = _alunoRepository.ConsultarTurmas(id);
+
+            if (turmas == null)
             {
-                throw new KeyNotFoundException("[Erro] Aluno não encontrado.");
-            }
-            if (turmas == null || turmas.Count == 0)
-            {
-                throw new KeyNotFoundException("[Erro] Nenhuma turma encontrada.");
+                throw new KeyNotFoundException("\n[Erro] Nenhuma turma encontrada.");
             }
 
             return turmas;

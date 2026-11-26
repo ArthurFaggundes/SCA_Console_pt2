@@ -1,20 +1,23 @@
 ﻿//using Microsoft.EntityFrameworkCore;
 //using SCA_ProjBackEnd.Data;
+using Microsoft.EntityFrameworkCore;
+using SCA_Console.Data;
 using SCA_Console.Models;
 
 namespace SCA_Console.Repository
 {
     public class AlunoRepository
     {
-        //private readonly SCAdbContext _context;
-        //public AlunoRepository(SCAdbContext context) {_context = context;}
+        private readonly ScaDBContext _context;
+        public AlunoRepository(ScaDBContext context) 
+            { _context = context; }
 
-        public readonly List<Aluno> listaAlunos = new();
+        //////////////////////////////////////////////////////////////////////////
 
         public void CriarAluno(Aluno aluno)
         {
-            listaAlunos.Add(aluno);
-            //_context.SaveChanges();
+            _context.Alunos.Add(aluno);
+            _context.SaveChanges();
         }
 
         //////////////////////////////////////////////////////////////////////////
@@ -26,6 +29,7 @@ namespace SCA_Console.Repository
             if (aluno != null)
             {
                 aluno.Excluido = true;
+                AlterarAluno(aluno);
             }
         }
 
@@ -47,16 +51,17 @@ namespace SCA_Console.Repository
         
         public List<Aluno> ListarAlunos()
         {
-            return listaAlunos;
+            return _context.Alunos.ToList();
         }
 
         //////////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////////////////////////
 
-        public Aluno BuscarAluno(int id)
+        public Aluno? BuscarAluno(int id)
         {
-            return listaAlunos.FirstOrDefault(a => a.idAluno == id)!;
-            // retorna em ordem alfabética (basicamente a função mais importante)
+            return _context.Alunos
+                            .Include(a => a.turmas)
+                            .FirstOrDefault(a => a.idAluno == id);
         }
 
         //////////////////////////////////////////////////////////////////////////
@@ -67,10 +72,17 @@ namespace SCA_Console.Repository
             Aluno aluno = BuscarAluno(id);
             if (aluno != null)
             {
-                return aluno.turmas;
+                return aluno.turmas.ToList();
             }
+            return new List<Turma>();
+        }
 
-            return null!;
+        //////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////
+        public void AlterarAluno(Aluno aluno)
+        {
+            _context.Alunos.Update(aluno);
+            _context.SaveChanges();
         }
     }
 }
