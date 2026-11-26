@@ -2,6 +2,7 @@
 using SCA_Console.Repository;
 using SCA_Console.Services;
 using SCA_Console.UI;
+using SCA_Console.Mocks;
 
 namespace SCA_Console
 {
@@ -14,11 +15,14 @@ namespace SCA_Console
             ConsoleInterface ConI = new();
 
             ConI.ConsoleHandler(alunoUI, disciplinaUI, professorUI, turmaUI);
+
         }
 
         public static (AlunoUI, DisciplinaUI, ProfessorUI, TurmaUI) InjetarDependencias()
         {
             ScaDBContext scaDBContext = new();
+
+            MockInit.CriarMocks(scaDBContext); //! CRIEI ESSES MOCKS PARA FICAR MAIS FÁCIL DE CORRIGIR
 
             // Camada que se comunica com o banco
             AlunoRepository alunoRepository = new(scaDBContext);
